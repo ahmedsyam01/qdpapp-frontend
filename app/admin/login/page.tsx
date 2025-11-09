@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import Image from 'next/image';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

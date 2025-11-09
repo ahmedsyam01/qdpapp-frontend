@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { PropertyCard } from '@/components/ui/PropertyCard';
 import { usePropertyStore } from '@/store/propertyStore';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Property {
   _id: string;
@@ -35,7 +36,7 @@ function SearchResultsContent() {
       // Always add a reasonable limit
       if (!queryParams.has('limit')) queryParams.append('limit', '50');
 
-      const url = `http://localhost:3001/api/properties?${queryParams.toString()}`;
+      const url = `${API_BASE_URL}/properties?${queryParams.toString()}`;
 
       const response = await fetch(url);
       return response.json();

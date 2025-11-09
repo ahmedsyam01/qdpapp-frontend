@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { usePropertyDetail } from '@/hooks/useProperties';
+import { API_BASE_URL } from '@/lib/config';
 
 /**
  * Request Property Viewing Appointment
@@ -49,7 +50,7 @@ export default function RequestViewingPage() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/api/appointments/property/${propertyId}/booked-slots?date=${watchDate}`,
+          `${API_BASE_URL}/appointments/property/${propertyId}/booked-slots?date=${watchDate}`,
           {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
@@ -74,7 +75,7 @@ export default function RequestViewingPage() {
       setSubmitting(true);
 
       // Create appointment via API
-      const response = await fetch('http://localhost:3001/api/appointments', {
+      const response = await fetch(`${API_BASE_URL}/appointments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

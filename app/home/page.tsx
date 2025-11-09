@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { useAuthStore } from '@/store/authStore';
 import { useNotifications } from '@/hooks/useNotifications';
 import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function HomePage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function HomePage() {
   const { data, isLoading } = useQuery({
     queryKey: ['properties', { limit: 10 }],
     queryFn: async () => {
-      const response = await fetch('http://localhost:3001/api/properties?limit=10');
+      const response = await fetch(`${API_BASE_URL}/properties?limit=10`);
       return response.json();
     },
   });
@@ -27,7 +28,7 @@ export default function HomePage() {
   const { data: appliancesData, isLoading: isLoadingAppliances } = useQuery({
     queryKey: ['appliances', { limit: 5 }],
     queryFn: async () => {
-      const response = await fetch('http://localhost:3001/api/appliances');
+      const response = await fetch(`${API_BASE_URL}/appliances`);
       return response.json();
     },
   });
