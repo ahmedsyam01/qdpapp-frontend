@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../../../store/adminAuthStore';
+import { API_BASE_URL } from '@/lib/config';
 import { useParams, useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function AdminPropertyEditPage() {
   const { token } = useAdminAuthStore();
@@ -83,7 +87,7 @@ export default function AdminPropertyEditPage() {
   const fetchProperty = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -258,7 +262,7 @@ export default function AdminPropertyEditPage() {
       if (formData.totalFloors) updateData.specifications.totalFloors = parseInt(formData.totalFloors);
       if (formData.parkingSpaces) updateData.specifications.parkingSpaces = parseInt(formData.parkingSpaces);
 
-      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

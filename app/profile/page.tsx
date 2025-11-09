@@ -1,13 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 import Image from 'next/image';
+import { API_BASE_URL } from '@/lib/config';
 import { MapPin, Settings, Gift, Download, ChevronRight } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/config';
 import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { API_BASE_URL } from '@/lib/config';
 import { contractService } from '@/services/contractService';
+import { API_BASE_URL } from '@/lib/config';
 import { useAuthStore } from '@/store/authStore';
+import { API_BASE_URL } from '@/lib/config';
 import { useAppSettings } from '@/hooks/useAppSettings';
+import { API_BASE_URL } from '@/lib/config';
 
 interface UserProfile {
   fullName: string;
@@ -114,7 +122,7 @@ export default function ProfilePage() {
   const loadMyAds = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/properties/my-listings', {
+      const response = await fetch('${API_BASE_URL}/properties/my-listings', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },

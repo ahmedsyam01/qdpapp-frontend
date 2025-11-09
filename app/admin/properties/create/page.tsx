@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
+import { API_BASE_URL } from '@/lib/config';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function AdminPropertyCreatePage() {
   const { token } = useAdminAuthStore();
@@ -165,7 +169,7 @@ export default function AdminPropertyCreatePage() {
       if (formData.totalFloors) propertyData.specifications.totalFloors = parseInt(formData.totalFloors);
       if (formData.parkingSpaces) propertyData.specifications.parkingSpaces = parseInt(formData.parkingSpaces);
 
-      const response = await fetch('http://localhost:3001/api/properties', {
+      const response = await fetch('${API_BASE_URL}/properties', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

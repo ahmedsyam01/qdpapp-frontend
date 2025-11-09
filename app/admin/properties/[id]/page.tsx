@@ -1,10 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
+import { API_BASE_URL } from '@/lib/config';
 import { useParams, useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 import Image from 'next/image';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Property {
   _id: string;
@@ -72,7 +77,7 @@ export default function AdminPropertyDetailPage() {
   const fetchProperty = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -93,7 +98,7 @@ export default function AdminPropertyDetailPage() {
     if (!confirm('هل أنت متأكد من الموافقة على هذا العقار؟')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -114,7 +119,7 @@ export default function AdminPropertyDetailPage() {
     if (!reason) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

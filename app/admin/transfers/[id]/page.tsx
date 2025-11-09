@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
+import { API_BASE_URL } from '@/lib/config';
 import { useParams, useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface TransferRequest {
   _id: string;
@@ -64,7 +68,7 @@ export default function AdminTransferDetailPage() {
   const fetchTransfer = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/admin/properties/transfers/${transferId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/transfers/${transferId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -85,7 +89,7 @@ export default function AdminTransferDetailPage() {
     const notes = prompt('ملاحظات الموافقة (اختياري):');
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/transfers/${transferId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/transfers/${transferId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -107,7 +111,7 @@ export default function AdminTransferDetailPage() {
     if (!reason) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/transfers/${transferId}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/transfers/${transferId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

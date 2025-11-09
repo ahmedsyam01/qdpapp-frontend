@@ -1,11 +1,17 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { API_BASE_URL } from '@/lib/config';
 import { useInView } from 'react-intersection-observer';
+import { API_BASE_URL } from '@/lib/config';
 import { useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 import { PropertyCard } from '@/components/ui/PropertyCard';
+import { API_BASE_URL } from '@/lib/config';
 import { PropertyCardSkeleton } from '@/components/ui/PropertyCardSkeleton';
+import { API_BASE_URL } from '@/lib/config';
 import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Property {
   _id: string;
@@ -38,7 +44,7 @@ export default function PropertiesPage() {
     queryKey: ['properties-infinite'],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await fetch(
-        `http://localhost:3001/api/properties?offset=${pageParam}&limit=10`
+        `${API_BASE_URL}/properties?offset=${pageParam}&limit=10`
       );
       return response.json();
     },
