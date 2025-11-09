@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
-import { API_BASE_URL } from '@/lib/config';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../styles/adminDesignSystem';
-import { API_BASE_URL } from '@/lib/config';
 
 interface Property {
   _id: string;
@@ -74,7 +70,7 @@ export default function AdminPropertiesPage() {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/admin/properties?page=${currentPage}&limit=${itemsPerPage}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/properties?page=${currentPage}&limit=${itemsPerPage}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -108,7 +104,7 @@ export default function AdminPropertiesPage() {
   const fetchAllPropertiesStats = async () => {
     try {
       // Fetch all properties to calculate stats (we need all for accurate counts)
-      const response = await fetch(`${API_BASE_URL}/admin/properties?page=1&limit=1000`, {
+      const response = await fetch(`http://localhost:3001/api/admin/properties?page=1&limit=1000`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -166,7 +162,7 @@ export default function AdminPropertiesPage() {
     if (!confirm('هل أنت متأكد من الموافقة على هذا العقار؟')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}/approve`, {
+      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -187,7 +183,7 @@ export default function AdminPropertiesPage() {
     if (!reason) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/properties/${propertyId}/reject`, {
+      const response = await fetch(`http://localhost:3001/api/admin/properties/${propertyId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

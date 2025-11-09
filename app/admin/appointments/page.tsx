@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
-import { API_BASE_URL } from '@/lib/config';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../styles/adminDesignSystem';
-import { API_BASE_URL } from '@/lib/config';
 
 interface Appointment {
   _id: string;
@@ -103,7 +99,7 @@ export default function AdminAppointmentsPage() {
         params.append('appointmentType', typeFilter);
       }
 
-      const response = await fetch(`${API_BASE_URL}/admin/appointments?${params}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/appointments?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -126,7 +122,7 @@ export default function AdminAppointmentsPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('${API_BASE_URL}/admin/appointments/stats', {
+      const response = await fetch('http://localhost:3001/api/admin/appointments/stats', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -145,7 +141,7 @@ export default function AdminAppointmentsPage() {
     if (!confirm(`هل أنت متأكد من تغيير حالة الموعد إلى "${getStatusLabel(newStatus)}"؟`)) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}/status`, {
+      const response = await fetch(`http://localhost:3001/api/admin/appointments/${appointmentId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -167,7 +163,7 @@ export default function AdminAppointmentsPage() {
     if (!confirm('هل أنت متأكد من حذف هذا الموعد؟')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/appointments/${appointmentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

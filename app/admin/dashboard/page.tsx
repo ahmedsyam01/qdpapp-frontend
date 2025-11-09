@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
-import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../styles/adminDesignSystem';
-import { API_BASE_URL } from '@/lib/config';
 
 interface DashboardStats {
   overview: {
@@ -46,7 +43,7 @@ export default function DashboardPage() {
         setLoading(true);
 
         // Fetch dashboard stats
-        const statsResponse = await fetch('${API_BASE_URL}/admin/analytics/dashboard/stats', {
+        const statsResponse = await fetch('http://localhost:3001/api/admin/analytics/dashboard/stats', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -58,7 +55,7 @@ export default function DashboardPage() {
         }
 
         // Fetch pending appointments count (unconfirmed inspection appointments)
-        const pendingAppointmentsResponse = await fetch('${API_BASE_URL}/admin/appointments?status=unconfirmed&limit=1000', {
+        const pendingAppointmentsResponse = await fetch('http://localhost:3001/api/admin/appointments?status=unconfirmed&limit=1000', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -76,7 +73,7 @@ export default function DashboardPage() {
         today.setHours(0, 0, 0, 0); // Reset to start of day
         const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-        const todayAppointmentsResponse = await fetch(`${API_BASE_URL}/admin/appointments?status=confirmed&limit=100`, {
+        const todayAppointmentsResponse = await fetch(`http://localhost:3001/api/admin/appointments?status=confirmed&limit=100`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -102,7 +99,7 @@ export default function DashboardPage() {
         }
 
         // Fetch recent activities
-        const activitiesResponse = await fetch('${API_BASE_URL}/admin/analytics/recent-activity?limit=10', {
+        const activitiesResponse = await fetch('http://localhost:3001/api/admin/analytics/recent-activity?limit=10', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

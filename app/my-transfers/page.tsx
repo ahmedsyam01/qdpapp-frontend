@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/lib/config';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/lib/config';
 import { useAuthStore } from '../../store/authStore';
-import { API_BASE_URL } from '@/lib/config';
 
 interface PropertyTransfer {
   _id: string;
@@ -51,7 +48,7 @@ export default function MyTransfersPage() {
   const fetchTransfers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('${API_BASE_URL}/user/bookings/transfers/list', {
+      const response = await fetch('http://localhost:3001/api/user/bookings/transfers/list', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

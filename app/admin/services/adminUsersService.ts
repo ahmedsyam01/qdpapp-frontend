@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { API_BASE_URL } from '@/lib/config';
 
-const API_URL = '${API_BASE_URL}/admin/users';
+const API_URL = 'http://localhost:3001/api/admin/users';
 
 export interface User {
   _id: string;

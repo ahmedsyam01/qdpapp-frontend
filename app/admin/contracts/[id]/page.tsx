@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@/lib/config';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
-import { API_BASE_URL } from '@/lib/config';
 import { useParams, useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/lib/config';
 import ds from '../../../../styles/adminDesignSystem';
-import { API_BASE_URL } from '@/lib/config';
 
 interface Contract {
   _id: string;
@@ -73,7 +69,7 @@ export default function AdminContractDetailPage() {
   const fetchContract = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/admin/contracts/${contractId}`, {
+      const response = await fetch(`http://localhost:3001/api/admin/contracts/${contractId}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
@@ -92,7 +88,7 @@ export default function AdminContractDetailPage() {
 
     try {
       setUpdating(true);
-      const response = await fetch(`${API_BASE_URL}/admin/contracts/${contractId}/status`, {
+      const response = await fetch(`http://localhost:3001/api/admin/contracts/${contractId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -116,7 +112,7 @@ export default function AdminContractDetailPage() {
 
     try {
       setUpdating(true);
-      const response = await fetch(`${API_BASE_URL}/admin/contracts/${contractId}/approve-cancellation`, {
+      const response = await fetch(`http://localhost:3001/api/admin/contracts/${contractId}/approve-cancellation`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -143,7 +139,7 @@ export default function AdminContractDetailPage() {
 
     try {
       setUpdating(true);
-      const response = await fetch(`${API_BASE_URL}/admin/contracts/${contractId}/sign-landlord`, {
+      const response = await fetch(`http://localhost:3001/api/admin/contracts/${contractId}/sign-landlord`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
