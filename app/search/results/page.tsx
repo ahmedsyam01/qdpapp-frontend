@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { PropertyCard } from '@/components/ui/PropertyCard';
 import { usePropertyStore } from '@/store/propertyStore';
 
-export default function SearchResultsPage() {
+interface Property {
+  _id: string;
+  [key: string]: unknown;
+}
+
+function SearchResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('q') || '';
@@ -112,7 +117,7 @@ export default function SearchResultsPage() {
               {data.properties.length} نتيجة
             </div>
             <div className="space-y-4">
-              {data.properties.map((property: any) => (
+              {data.properties.map((property: Property) => (
                 <PropertyCard key={property._id} property={property} />
               ))}
             </div>
@@ -134,5 +139,17 @@ export default function SearchResultsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+      </div>
+    }>
+      <SearchResultsContent />
+    </Suspense>
   );
 }

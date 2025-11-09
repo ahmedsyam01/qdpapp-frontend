@@ -53,8 +53,9 @@ export default function SignupPage() {
 
       // Redirect to OTP verification
       router.push(`/auth/verify-otp?phone=${encodeURIComponent(data.phone.startsWith('+974') ? data.phone : `+974${data.phone}`)}`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل إنشاء الحساب');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل إنشاء الحساب');
     } finally {
       setIsLoading(false);
     }

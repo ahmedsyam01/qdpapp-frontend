@@ -54,8 +54,9 @@ function ResetPasswordContent() {
       setTimeout(() => {
         router.push('/auth/login');
       }, 1500);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل تغيير كلمة السر');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل تغيير كلمة السر');
     } finally {
       setIsLoading(false);
     }

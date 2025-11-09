@@ -50,8 +50,9 @@ function SignContractContent() {
         });
         setContract(data);
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to load contract');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to load contract');
     } finally {
       setLoading(false);
     }
@@ -80,8 +81,9 @@ function SignContractContent() {
 
       // Navigate to payment screen
       router.push(`/property/booking/checkout?contractId=${contract._id}`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to sign contract');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to sign contract');
     } finally {
       setSigning(false);
     }

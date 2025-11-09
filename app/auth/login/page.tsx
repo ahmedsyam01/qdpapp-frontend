@@ -43,8 +43,9 @@ export default function LoginPage() {
       login(response.accessToken, response.user);
       toast.success('تم تسجيل الدخول بنجاح!');
       router.push('/home');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل تسجيل الدخول');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل تسجيل الدخول');
     } finally {
       setIsLoading(false);
     }

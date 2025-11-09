@@ -38,8 +38,9 @@ export default function ForgotPasswordPage() {
 
       // Redirect to OTP verification with forgot-password flag
       router.push(`/auth/verify-otp?phone=${encodeURIComponent(phone)}&from=forgot-password`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل إرسال رمز التحقق');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل إرسال رمز التحقق');
     } finally {
       setIsLoading(false);
     }

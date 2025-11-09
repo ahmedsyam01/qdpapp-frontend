@@ -112,11 +112,12 @@ function CheckoutContent() {
 
       // Navigate to success page
       router.push(`/property/booking/success?paymentId=${payment._id}&type=listing`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Payment error:', error);
-      console.error('Error response:', error.response?.data);
-      const errorMsg = error.response?.data?.message ||
-                       (Array.isArray(error.response?.data?.message) ? error.response?.data?.message.join(', ') : null) ||
+      const err = error as { response?: { data?: { message?: string | string[] } } };
+      console.error('Error response:', err.response?.data);
+      const errorMsg = err.response?.data?.message ||
+                       (Array.isArray(err.response?.data?.message) ? err.response?.data?.message.join(', ') : null) ||
                        'فشل الدفع';
       toast.error(errorMsg);
     } finally {

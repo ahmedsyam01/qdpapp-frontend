@@ -100,9 +100,10 @@ export default function RequestViewingPage() {
 
       // Navigate to appointments page
       router.push('/appointments');
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Show the error message from the server (which includes the Arabic double-booking message)
-      toast.error(error.message || 'فشل في إنشاء الموعد');
+      const err = error as { message?: string };
+      toast.error(err.message || 'فشل في إنشاء الموعد');
     } finally {
       setSubmitting(false);
     }

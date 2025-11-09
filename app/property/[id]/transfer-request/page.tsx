@@ -80,8 +80,9 @@ export default function PropertyTransferRequestPage() {
 
       // Success - navigate to confirmation or property page
       router.push(`/property/${propertyId}?transfer_submitted=true`);
-    } catch (err: any) {
-      setError(err.message || 'حدث خطأ أثناء تقديم الطلب');
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error.message || 'حدث خطأ أثناء تقديم الطلب');
     } finally {
       setIsSubmitting(false);
     }

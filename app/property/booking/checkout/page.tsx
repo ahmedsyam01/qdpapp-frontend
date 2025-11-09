@@ -75,8 +75,9 @@ function CheckoutContent() {
       setLoading(true);
       const data = await contractService.findOne(contractId!);
       setContract(data);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل تحميل بيانات العقد');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل تحميل بيانات العقد');
     } finally {
       setLoading(false);
     }
@@ -133,8 +134,9 @@ function CheckoutContent() {
 
       // Navigate to success screen
       router.push(`/property/booking/success?paymentId=${payment._id}`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل الدفع');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل الدفع');
     } finally {
       setProcessing(false);
     }

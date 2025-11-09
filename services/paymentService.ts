@@ -31,7 +31,7 @@ export interface Payment {
   status: 'pending' | 'completed' | 'failed' | 'refunded' | 'cancelled';
   transactionId?: string;
   paymentGateway?: string;
-  gatewayResponse?: any;
+  gatewayResponse?: Record<string, unknown>;
   description?: string;
   refundReason?: string;
   refundedAt?: string;
@@ -55,11 +55,12 @@ export const paymentService = {
       const response = await api.post('/payments/process', data);
       console.log('[PAYMENT SERVICE] Payment response:', response.data);
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string; response?: { data?: unknown; status?: number } };
       console.error('[PAYMENT SERVICE] Payment error:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
       });
       throw error;
     }
@@ -76,7 +77,7 @@ export const paymentService = {
   /**
    * Get current user's payment history
    */
-  getMyPayments: async (filters?: any): Promise<Payment[]> => {
+  getMyPayments: async (filters?: Record<string, string | number>): Promise<Payment[]> => {
     const response = await api.get('/payments/my-payments', { params: filters });
     return response.data;
   },

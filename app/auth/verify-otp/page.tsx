@@ -62,8 +62,9 @@ function VerifyOTPContent() {
         toast.success('تم التحقق من رقم الهاتف بنجاح!');
         router.push('/home');
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل التحقق من الرمز');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل التحقق من الرمز');
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +79,7 @@ function VerifyOTPContent() {
       setTimer(600);
       setCanResend(false);
       setOtp(['', '', '', '', '']);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error('فشل إرسال الرمز');
     }
   };
