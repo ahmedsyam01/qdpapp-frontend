@@ -71,10 +71,11 @@ export default function NewServicePage() {
       setTimeout(() => {
         router.push('/services');
       }, 2000);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       console.error('Error creating service:', err);
-      console.error('Error details:', err.response?.data);
-      setError(err.response?.data?.message || 'Failed to create service request');
+      console.error('Error details:', error.response?.data);
+      setError(error.response?.data?.message || 'Failed to create service request');
       setLoading(false);
     }
   };

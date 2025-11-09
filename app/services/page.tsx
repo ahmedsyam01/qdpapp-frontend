@@ -41,9 +41,10 @@ export default function ServicesPage() {
       console.log('Fetched current services:', current);
       console.log('Number of services:', current.length);
       setCurrentServices(current);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       console.error('Error fetching services:', err);
-      setError(err.response?.data?.message || 'Failed to load services');
+      setError(error.response?.data?.message || 'Failed to load services');
     } finally {
       setLoading(false);
     }

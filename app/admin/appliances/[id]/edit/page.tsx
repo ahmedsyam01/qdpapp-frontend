@@ -116,9 +116,10 @@ export default function EditAppliancePage() {
       await adminAppliancesService.updateAppliance(id, cleanedData);
       toast.success('تم تحديث الجهاز بنجاح');
       router.push(`/admin/appliances/${id}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error updating appliance:', error);
-      toast.error(error.response?.data?.message || 'فشل في تحديث الجهاز');
+      toast.error(err.response?.data?.message || 'فشل في تحديث الجهاز');
     } finally {
       setSubmitting(false);
     }

@@ -77,8 +77,9 @@ export default function AdminLoginPage() {
       });
 
       router.push('/admin/dashboard');
-    } catch (error: any) {
-      setErrors({ general: error.message || 'حدث خطأ أثناء تسجيل الدخول' });
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      setErrors({ general: err.message || 'حدث خطأ أثناء تسجيل الدخول' });
     } finally {
       setLoading(false);
     }

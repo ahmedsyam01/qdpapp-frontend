@@ -95,9 +95,10 @@ export default function CreateAppliancePage() {
       await adminAppliancesService.createAppliance(data);
       toast.success('تم إضافة الجهاز بنجاح');
       router.push('/admin/appliances');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error creating appliance:', error);
-      toast.error(error.response?.data?.message || 'فشل في إضافة الجهاز');
+      toast.error(err.response?.data?.message || 'فشل في إضافة الجهاز');
     } finally {
       setLoading(false);
     }

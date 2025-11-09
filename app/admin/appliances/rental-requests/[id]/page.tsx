@@ -59,9 +59,10 @@ export default function RentalRequestDetailsPage() {
       toast.success('تم الموافقة على الطلب بنجاح');
       setShowApproveModal(false);
       fetchRentalDetails();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error approving rental:', error);
-      toast.error(error.response?.data?.message || 'فشل في الموافقة على الطلب');
+      toast.error(err.response?.data?.message || 'فشل في الموافقة على الطلب');
     } finally {
       setActionLoading(false);
     }
@@ -79,9 +80,10 @@ export default function RentalRequestDetailsPage() {
       toast.success('تم رفض الطلب');
       setShowRejectModal(false);
       fetchRentalDetails();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error rejecting rental:', error);
-      toast.error(error.response?.data?.message || 'فشل في رفض الطلب');
+      toast.error(err.response?.data?.message || 'فشل في رفض الطلب');
     } finally {
       setActionLoading(false);
     }
@@ -99,9 +101,10 @@ export default function RentalRequestDetailsPage() {
       setShowChangePaymentModal(false);
       setSelectedInstallment(null);
       fetchRentalDetails();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error changing payment method:', error);
-      toast.error(error.response?.data?.message || 'فشل في تغيير طريقة الدفع');
+      toast.error(err.response?.data?.message || 'فشل في تغيير طريقة الدفع');
     } finally {
       setActionLoading(false);
     }
@@ -126,9 +129,10 @@ export default function RentalRequestDetailsPage() {
       setSelectedInstallment(null);
       setPaidAmount('');
       fetchRentalDetails();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error marking as paid:', error);
-      toast.error(error.response?.data?.message || 'فشل في تحديد القسط كمدفوع');
+      toast.error(err.response?.data?.message || 'فشل في تحديد القسط كمدفوع');
     } finally {
       setActionLoading(false);
     }

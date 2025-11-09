@@ -33,9 +33,10 @@ export default function ServiceDetailsPage() {
       setError(null);
       const data = await serviceService.getById(serviceId);
       setService(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       console.error('Error fetching service details:', err);
-      setError(err.response?.data?.message || 'Failed to load service details');
+      setError(error.response?.data?.message || 'Failed to load service details');
     } finally {
       setLoading(false);
     }
@@ -49,9 +50,10 @@ export default function ServiceDetailsPage() {
       await serviceService.rate(service._id, { rating, feedback });
       setShowRatingModal(false);
       await fetchServiceDetails(); // Refresh data
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       console.error('Error submitting rating:', err);
-      alert(err.response?.data?.message || 'Failed to submit rating');
+      alert(error.response?.data?.message || 'Failed to submit rating');
     } finally {
       setSubmittingRating(false);
     }

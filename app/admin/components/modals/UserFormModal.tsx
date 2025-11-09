@@ -85,9 +85,10 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
 
       await onSubmit(submitData);
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Failed to submit user:', error);
-      setErrors({ submit: error.response?.data?.message || 'حدث خطأ أثناء حفظ البيانات' });
+      setErrors({ submit: err.response?.data?.message || 'حدث خطأ أثناء حفظ البيانات' });
     } finally {
       setLoading(false);
     }

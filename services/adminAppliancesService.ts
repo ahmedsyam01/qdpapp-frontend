@@ -36,7 +36,7 @@ export interface Appliance {
 export interface ApplianceRental {
   _id: string;
   applianceId: Appliance;
-  userId: any;
+  userId: string | { _id: string; fullName: string; phone: string };
   durationMonths: number;
   monthlyAmount: number;
   totalAmount: number;
@@ -54,7 +54,7 @@ export interface ApplianceRental {
   startDate: Date;
   endDate: Date;
   deliveryAddress?: string;
-  approvedBy?: any;
+  approvedBy?: string | { _id: string; fullName: string };
   approvedAt?: Date;
   rejectionReason?: string;
   createdAt: Date;
@@ -64,7 +64,7 @@ export interface ApplianceRental {
 export const adminAppliancesService = {
   // ========== إدارة الأجهزة (Appliances Management) ==========
 
-  async getAllAppliances(filters?: any) {
+  async getAllAppliances(filters?: Record<string, string | number | boolean>) {
     const response = await api.get(ADMIN_APPLIANCES_URL, { params: filters });
     return response.data;
   },
@@ -79,12 +79,12 @@ export const adminAppliancesService = {
     return response.data;
   },
 
-  async createAppliance(data: any) {
+  async createAppliance(data: Partial<Appliance>) {
     const response = await api.post(ADMIN_APPLIANCES_URL, data);
     return response.data;
   },
 
-  async updateAppliance(id: string, data: any) {
+  async updateAppliance(id: string, data: Partial<Appliance>) {
     const response = await api.put(`${ADMIN_APPLIANCES_URL}/${id}`, data);
     return response.data;
   },
@@ -99,14 +99,14 @@ export const adminAppliancesService = {
     return response.data;
   },
 
-  async getRentalHistory(id: string, query?: any) {
+  async getRentalHistory(id: string, query?: Record<string, string | number | boolean>) {
     const response = await api.get(`${ADMIN_APPLIANCES_URL}/${id}/rental-history`, { params: query });
     return response.data;
   },
 
   // ========== طلبات التأجير (Rental Requests) ==========
 
-  async getRentalRequests(filters?: any) {
+  async getRentalRequests(filters?: Record<string, string | number | boolean>) {
     const response = await api.get(`${ADMIN_APPLIANCES_URL}/rental-requests/all`, { params: filters });
     return response.data;
   },

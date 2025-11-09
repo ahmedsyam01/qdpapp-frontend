@@ -89,9 +89,10 @@ export default function AppliancesPage() {
       toast.success('تم الموافقة على الطلب بنجاح');
       fetchRentalRequests();
       fetchStats();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error approving rental:', error);
-      toast.error(error.response?.data?.message || 'فشل في الموافقة على الطلب');
+      toast.error(err.response?.data?.message || 'فشل في الموافقة على الطلب');
     }
   };
 
@@ -104,9 +105,10 @@ export default function AppliancesPage() {
       toast.success('تم رفض الطلب');
       fetchRentalRequests();
       fetchStats();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error('Error rejecting rental:', error);
-      toast.error(error.response?.data?.message || 'فشل في رفض الطلب');
+      toast.error(err.response?.data?.message || 'فشل في رفض الطلب');
     }
   };
 

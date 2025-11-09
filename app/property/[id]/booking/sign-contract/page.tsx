@@ -127,10 +127,11 @@ function SignContractContent() {
         const data = await contractService.create(contractData);
         setContract(data);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string; response?: { data?: { message?: string } } };
       console.error('Contract creation error:', error);
-      console.error('Error response:', error.response?.data);
-      toast.error(error.response?.data?.message || error.message || 'Failed to load contract');
+      console.error('Error response:', err.response?.data);
+      toast.error(err.response?.data?.message || err.message || 'Failed to load contract');
     } finally {
       setLoading(false);
     }
@@ -164,8 +165,9 @@ function SignContractContent() {
 
       // Navigate to payment screen
       router.push(`/property/booking/checkout?contractId=${contract._id}`);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'فشل في توقيع العقد');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'فشل في توقيع العقد');
     } finally {
       setSigning(false);
     }

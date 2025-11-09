@@ -181,9 +181,10 @@ export default function AddPropertyStep3() {
         router.push(`/add-property/checkout?listingId=${listing._id}&amount=${totalCost}`);
       }, 500);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as { message?: string };
       console.error('Error creating property:', error);
-      toast.error(error.message || 'حدث خطأ أثناء إنشاء الإعلان');
+      toast.error(err.message || 'حدث خطأ أثناء إنشاء الإعلان');
     }
   };
 
