@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import { useRouter } from 'next/navigation';
 import ds from '../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface InstallmentWithDetails {
   bookingId: string;
@@ -55,7 +56,7 @@ export default function AdminInstallmentsPage() {
     try {
       setLoading(true);
       // Fetch all approved rent bookings with installments
-      const response = await fetch('http://localhost:3001/api/admin/properties/bookings/all?bookingType=rent&status=approved', {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/all?bookingType=rent&status=approved`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -126,7 +127,7 @@ export default function AdminInstallmentsPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/admin/properties/bookings/${bookingId}/installments/${installmentNumber}/mark-paid`,
+        `${API_BASE_URL}/admin/properties/bookings/${bookingId}/installments/${installmentNumber}/mark-paid`,
         {
           method: 'PUT',
           headers: {

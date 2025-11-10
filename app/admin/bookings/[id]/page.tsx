@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
 import { useParams, useRouter } from 'next/navigation';
 import ds from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Installment {
   installmentNumber: number;
@@ -63,7 +64,7 @@ export default function AdminBookingDetailPage() {
   const fetchBooking = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/admin/properties/bookings/${bookingId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/${bookingId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -84,7 +85,7 @@ export default function AdminBookingDetailPage() {
     if (!confirm('هل أنت متأكد من الموافقة على هذا الحجز؟')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/bookings/${bookingId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/${bookingId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -105,7 +106,7 @@ export default function AdminBookingDetailPage() {
     if (!reason) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/bookings/${bookingId}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/${bookingId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -127,7 +128,7 @@ export default function AdminBookingDetailPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/admin/properties/bookings/${bookingId}/installments/${installmentNumber}/mark-paid`,
+        `${API_BASE_URL}/admin/properties/bookings/${bookingId}/installments/${installmentNumber}/mark-paid`,
         {
           method: 'PUT',
           headers: {

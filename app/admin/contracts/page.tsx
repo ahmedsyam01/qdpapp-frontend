@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import { useRouter } from 'next/navigation';
 import ds from '../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Contract {
   _id: string;
@@ -63,7 +64,7 @@ export default function AdminContractsPage() {
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (typeFilter !== 'all') params.append('contractType', typeFilter);
 
-      const response = await fetch(`http://localhost:3001/api/admin/contracts?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/contracts?${params}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
 
@@ -81,7 +82,7 @@ export default function AdminContractsPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/admin/contracts/stats', {
+      const response = await fetch(`${API_BASE_URL}/admin/contracts/stats`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) setStats(await response.json());

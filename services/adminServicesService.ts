@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { API_BASE_URL, SERVER_BASE_URL } from '@/lib/config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+// Use SERVER_BASE_URL (without /api) for this service
+const API_URL = SERVER_BASE_URL;
 
 export interface Service {
   _id: string;

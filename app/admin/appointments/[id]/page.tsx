@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
 import { useParams, useRouter } from 'next/navigation';
 import ds from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Appointment {
   _id: string;
@@ -63,7 +64,7 @@ export default function AdminAppointmentDetailPage() {
   const fetchAppointment = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/admin/appointments/${appointmentId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -87,7 +88,7 @@ export default function AdminAppointmentDetailPage() {
 
     try {
       setUpdating(true);
-      const response = await fetch(`http://localhost:3001/api/admin/appointments/${appointmentId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -110,7 +111,7 @@ export default function AdminAppointmentDetailPage() {
     if (!confirm('هل أنت متأكد من حذف هذا الموعد؟ لا يمكن التراجع عن هذا الإجراء.')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/appointments/${appointmentId}`, {
+      const response = await fetch(`${API_BASE_URL}/admin/appointments/${appointmentId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

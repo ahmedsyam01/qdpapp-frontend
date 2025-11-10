@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ds from '../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Booking {
   _id: string;
@@ -62,8 +63,8 @@ export default function AdminBookingsPage() {
     try {
       setLoading(true);
       const url = propertyIdFilter
-        ? `http://localhost:3001/api/admin/properties/bookings/all?propertyId=${propertyIdFilter}`
-        : 'http://localhost:3001/api/admin/properties/bookings/all';
+        ? `${API_BASE_URL}/admin/properties/bookings/all?propertyId=${propertyIdFilter}`
+        : `${API_BASE_URL}/admin/properties/bookings/all`;
 
       const response = await fetch(url, {
         headers: {
@@ -118,7 +119,7 @@ export default function AdminBookingsPage() {
     if (!confirm('هل أنت متأكد من الموافقة على هذا الحجز؟')) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/bookings/${bookingId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/${bookingId}/approve`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -139,7 +140,7 @@ export default function AdminBookingsPage() {
     if (!reason) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/admin/properties/bookings/${bookingId}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/admin/properties/bookings/${bookingId}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
