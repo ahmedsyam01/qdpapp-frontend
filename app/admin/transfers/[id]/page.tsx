@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdminAuthStore } from '../../../../store/adminAuthStore';
 import { useParams, useRouter } from 'next/navigation';
 import ds from '../../../../styles/adminDesignSystem';
-import { API_BASE_URL } from '@/lib/config'; from '../../../../styles/adminDesignSystem';
+import { API_BASE_URL } from '@/lib/config';
 
 interface TransferRequest {
   _id: string;
