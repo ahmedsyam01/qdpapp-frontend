@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuthStore } from '../../../store/authStore';
 import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { API_BASE_URL } from '@/lib/config';
 
 interface PropertyBooking {
   _id: string;
@@ -59,7 +60,7 @@ export default function BookingDetailsPage() {
   const fetchBookingDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:3001/api/user/bookings/${bookingId}`, {
+      const response = await fetch(`${API_BASE_URL}/user/bookings/${bookingId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

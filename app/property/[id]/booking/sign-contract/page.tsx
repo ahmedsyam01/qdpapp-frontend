@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { contractService, Contract } from '@/services/contractService';
 import { Download, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { API_BASE_URL } from '@/lib/config';
 
 /**
  * Contract Signing Screen (Rental & Sale)
@@ -51,7 +52,7 @@ function SignContractContent() {
       } else if (propertyId && contractType) {
         // First, check if user already has an active booking for this property
         const token = localStorage.getItem('accessToken');
-        const checkResponse = await fetch(`http://localhost:3001/api/user/bookings/check/${propertyId}`, {
+        const checkResponse = await fetch(`${API_BASE_URL}/user/bookings/check/${propertyId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -67,7 +68,7 @@ function SignContractContent() {
         }
 
         // Fetch the property to get price and owner info
-        const propertyResponse = await fetch(`http://localhost:3001/api/properties/${propertyId}`, {
+        const propertyResponse = await fetch(`${API_BASE_URL}/properties/${propertyId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -80,7 +81,7 @@ function SignContractContent() {
         const property = await propertyResponse.json();
 
         // Get current user ID from token (reusing token from above)
-        const userResponse = await fetch('http://localhost:3001/api/users/profile', {
+        const userResponse = await fetch(`${API_BASE_URL}/users/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

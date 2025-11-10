@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { usePropertyDetail } from '@/hooks/useProperties';
 import { useState } from 'react';
 import Image from 'next/image';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function PropertyTransferRequestPage() {
   const params = useParams();
@@ -33,7 +34,7 @@ export default function PropertyTransferRequestPage() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/api/user/bookings/transfers/property/create', {
+      const response = await fetch(`${API_BASE_URL}/user/bookings/transfers/property/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

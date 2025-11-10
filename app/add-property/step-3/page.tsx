@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { API_BASE_URL } from '@/lib/config';
 
 /**
  * Add Property - Step 3
@@ -105,7 +106,7 @@ export default function AddPropertyStep3() {
         amenities: [],
       };
 
-      const response = await fetch('http://localhost:3001/api/properties', {
+      const response = await fetch(`${API_BASE_URL}/properties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +136,7 @@ export default function AddPropertyStep3() {
       else adDuration = '90_days';
 
       // Create listing for the property
-      const listingResponse = await fetch('http://localhost:3001/api/listings', {
+      const listingResponse = await fetch(`${API_BASE_URL}/listings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

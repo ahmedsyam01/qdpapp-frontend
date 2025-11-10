@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { PropertyCard } from '@/components/ui/PropertyCard';
 import { PropertyCardSkeleton } from '@/components/ui/PropertyCardSkeleton';
 import { BottomNavigation } from '@/components/ui/BottomNavigation';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Property {
   _id: string;
@@ -38,7 +39,7 @@ export default function PropertiesPage() {
     queryKey: ['properties-infinite'],
     queryFn: async ({ pageParam = 0 }) => {
       const response = await fetch(
-        `http://localhost:3001/api/properties?offset=${pageParam}&limit=10`
+        `${API_BASE_URL}/properties?offset=${pageParam}&limit=10`
       );
       return response.json();
     },

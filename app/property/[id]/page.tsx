@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { usePropertyDetail } from '@/hooks/useProperties';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/config';
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -30,7 +31,7 @@ export default function PropertyDetailPage() {
           return;
         }
 
-        const url = `http://localhost:3001/api/user/bookings/check/${propertyId}`;
+        const url = `${API_BASE_URL}/user/bookings/check/${propertyId}`;
         console.log('Fetching:', url);
 
         const response = await fetch(url, {
