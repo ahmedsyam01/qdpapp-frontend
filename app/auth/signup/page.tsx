@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input, Button } from '@/components/forms';
-import { PhoneInput } from '@/components/forms/PhoneInput';
+import { PhoneInputWithCountryCode } from '@/components/forms/PhoneInputWithCountryCode';
 import { authService } from '@/services/authService';
 import toast, { Toaster } from 'react-hot-toast';
+import { getCountryCallingCode } from 'react-phone-number-input';
 
 // Validation schema
 const signupSchema = z.object({
@@ -30,11 +31,12 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [countryCode, setCountryCode] = useState<string>('QA'); // Default to Qatar
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -43,10 +45,13 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
     try {
+      const callingCode = getCountryCallingCode(countryCode as any);
+      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
+
       await authService.register({
         fullName: data.fullName,
         identityNumber: data.identityNumber,
-        phone: data.phone,
+        phone: fullPhoneNumber,
         email: data.email || undefined,
         password: data.password,
       });
@@ -54,7 +59,7 @@ export default function SignupPage() {
       toast.success('تم إنشاء الحساب بنجاح! يرجى التحقق من رقم الهاتف');
 
       // Redirect to OTP verification
-      router.push(`/auth/verify-otp?phone=${encodeURIComponent(data.phone)}`);
+      router.push(`/auth/verify-otp?phone=${encodeURIComponent(fullPhoneNumber)}`);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || 'فشل إنشاء الحساب');
@@ -125,19 +130,14 @@ export default function SignupPage() {
           />
 
           {/* Phone Input */}
-          <Controller
-            name="phone"
-            control={control}
-            render={({ field }) => (
-              <PhoneInput
-                label="رقم الهاتف"
-                placeholder="أدخل رقم الهاتف"
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.phone?.message}
-                defaultCountry="QA"
-              />
-            )}
+          <PhoneInputWithCountryCode
+            label="رقم الهاتف"
+            placeholder="أدخل رقم الهاتف"
+            phoneValue={phoneNumber}
+            countryCode={countryCode}
+            onPhoneChange={setPhoneNumber}
+            onCountryCodeChange={setCountryCode}
+            error={errors.phone?.message}
           />
 
           {/* Email Input */}

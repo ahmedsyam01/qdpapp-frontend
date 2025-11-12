@@ -5,44 +5,46 @@ import { useRouter } from 'next/navigation';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import Image from 'next/image';
 import { API_BASE_URL } from '@/lib/config';
-import PhoneInputWithCountry from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import type { E164Number } from 'react-phone-number-input';
+import { getCountries, getCountryCallingCode } from 'react-phone-number-input';
+import en from 'react-phone-number-input/locale/en';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const { setAuth } = useAdminAuthStore();
 
-  const [formData, setFormData] = useState({
-    phone: '' as E164Number | string,
-    password: '',
-  });
+  const [countryCode, setCountryCode] = useState<string>('QA'); // Default to Qatar
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ phone?: string; password?: string; general?: string }>({});
   const [loading, setLoading] = useState(false);
 
-  const handlePhoneChange = (value: E164Number | undefined) => {
-    setFormData((prev) => ({ ...prev, phone: value || '' }));
+  const handleCountryCodeChange = (value: string) => {
+    setCountryCode(value);
+    setErrors((prev) => ({ ...prev, phone: undefined, general: undefined }));
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
     setErrors((prev) => ({ ...prev, phone: undefined, general: undefined }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData((prev) => ({ ...prev, password: value }));
+    setPassword(e.target.value);
     setErrors((prev) => ({ ...prev, password: undefined, general: undefined }));
   };
 
   const validateForm = () => {
     const newErrors: { phone?: string; password?: string } = {};
 
-    if (!formData.phone) {
+    if (!phoneNumber) {
       newErrors.phone = 'رقم الهاتف مطلوب';
-    } else if (typeof formData.phone === 'string' && formData.phone.length < 8) {
+    } else if (phoneNumber.length < 8) {
       newErrors.phone = 'رقم الهاتف غير صحيح';
     }
 
-    if (!formData.password) {
+    if (!password) {
       newErrors.password = 'كلمة المرور مطلوبة';
-    } else if (formData.password.length < 8) {
+    } else if (password.length < 8) {
       newErrors.password = 'يجب أن تكون كلمة المرور 8 أحرف على الأقل';
     }
 
@@ -58,12 +60,18 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
+      const callingCode = getCountryCallingCode(countryCode as any);
+      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
+
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          phone: fullPhoneNumber,
+          password: password,
+        }),
       });
 
       const data = await response.json();
@@ -122,69 +130,6 @@ export default function AdminLoginPage() {
 
         * {
           font-family: 'Tajawal', sans-serif;
-        }
-
-        /* Phone Input Styling */
-        .PhoneInput {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .PhoneInputCountry {
-          display: flex;
-          align-items: center;
-          padding: 16px 12px;
-          background: #F9F9F9;
-          border: 2px solid #E5E7EB;
-          border-radius: 12px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .PhoneInputCountry:hover,
-        .PhoneInputCountry:focus-within {
-          background: #FFFFFF;
-          border: 2px solid #D9D1BE;
-          box-shadow: 0 0 0 4px rgba(217, 209, 190, 0.15);
-        }
-
-        .PhoneInputCountryIcon {
-          width: 24px;
-          height: 24px;
-          margin-right: 4px;
-          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-        }
-
-        .PhoneInputCountrySelect {
-          position: absolute;
-          opacity: 0;
-          cursor: pointer;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-        }
-
-        .PhoneInputCountrySelectArrow {
-          display: block;
-          width: 0.3em;
-          height: 0.3em;
-          margin-left: 0.35em;
-          border-style: solid;
-          border-color: #6b7280;
-          border-top-width: 0;
-          border-bottom-width: 1px;
-          border-left-width: 0;
-          border-right-width: 1px;
-          transform: rotate(45deg);
-          opacity: 0.7;
-        }
-
-        .PhoneInput input[type="tel"]:focus {
-          background: #FFFFFF !important;
-          border: 2px solid #D9D1BE !important;
-          box-shadow: 0 0 0 4px rgba(217, 209, 190, 0.15) !important;
         }
       `}</style>
 
@@ -317,27 +262,76 @@ export default function AdminLoginPage() {
                   color: '#111827',
                   marginBottom: '10px',
                 }}>رقم الهاتف</label>
-                <div style={{ direction: 'ltr' }}>
-                  <PhoneInputWithCountry
-                    international
-                    defaultCountry="QA"
-                    value={formData.phone as E164Number}
-                    onChange={handlePhoneChange}
+                <div style={{ direction: 'ltr', display: 'flex', gap: '8px' }}>
+                  {/* Country Code Selector */}
+                  <select
+                    value={countryCode}
+                    onChange={(e) => handleCountryCodeChange(e.target.value)}
+                    style={{
+                      padding: '16px 12px',
+                      background: '#F9F9F9',
+                      border: errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB',
+                      borderRadius: '12px',
+                      fontSize: '16px',
+                      color: '#111827',
+                      outline: 'none',
+                      transition: 'all 0.3s ease',
+                      boxSizing: 'border-box',
+                      fontWeight: '500',
+                      minWidth: '120px',
+                      cursor: 'pointer',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.background = '#FFFFFF';
+                      e.currentTarget.style.border = '2px solid #D9D1BE';
+                      e.currentTarget.style.boxShadow = '0 0 0 4px rgba(217, 209, 190, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.background = '#F9F9F9';
+                      e.currentTarget.style.border = errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    {getCountries().map((country) => {
+                      const callingCode = getCountryCallingCode(country);
+                      const countryName = en[country] || country;
+                      return (
+                        <option key={country} value={country}>
+                          {countryName} (+{callingCode})
+                        </option>
+                      );
+                    })}
+                  </select>
+
+                  {/* Phone Number Input */}
+                  <input
+                    type="tel"
                     placeholder="أدخل رقم الهاتف"
-                    numberInputProps={{
-                      style: {
-                        width: '100%',
-                        padding: '16px 20px',
-                        background: '#F9F9F9',
-                        border: errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB',
-                        borderRadius: '12px',
-                        fontSize: '16px',
-                        color: '#111827',
-                        outline: 'none',
-                        transition: 'all 0.3s ease',
-                        boxSizing: 'border-box',
-                        fontWeight: '500',
-                      },
+                    value={phoneNumber}
+                    onChange={handlePhoneChange}
+                    style={{
+                      flex: 1,
+                      padding: '16px 20px',
+                      background: '#F9F9F9',
+                      border: errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB',
+                      borderRadius: '12px',
+                      fontSize: '16px',
+                      color: '#111827',
+                      outline: 'none',
+                      transition: 'all 0.3s ease',
+                      boxSizing: 'border-box',
+                      fontWeight: '500',
+                      textAlign: 'right',
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.background = '#FFFFFF';
+                      e.currentTarget.style.border = '2px solid #D9D1BE';
+                      e.currentTarget.style.boxShadow = '0 0 0 4px rgba(217, 209, 190, 0.15)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.background = '#F9F9F9';
+                      e.currentTarget.style.border = errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
                   />
                 </div>
@@ -364,7 +358,7 @@ export default function AdminLoginPage() {
                   type="password"
                   name="password"
                   placeholder="••••••••"
-                  value={formData.password}
+                  value={password}
                   onChange={handlePasswordChange}
                   style={{
                     width: '100%',

@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input, Button } from '@/components/forms';
-import { PhoneInput } from '@/components/forms/PhoneInput';
+import { PhoneInputWithCountryCode } from '@/components/forms/PhoneInputWithCountryCode';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 import toast, { Toaster } from 'react-hot-toast';
+import { getCountryCallingCode } from 'react-phone-number-input';
 
 // Validation schema
 const loginSchema = z.object({
@@ -24,11 +25,12 @@ export default function LoginPage() {
   const login = useAuthStore((state) => state.login);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [countryCode, setCountryCode] = useState<string>('QA'); // Default to Qatar
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -37,8 +39,11 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
+      const callingCode = getCountryCallingCode(countryCode as any);
+      const fullPhoneNumber = `+${callingCode}${phoneNumber}`;
+
       const response = await authService.login({
-        phone: data.phone,
+        phone: fullPhoneNumber,
         password: data.password,
       });
 
@@ -67,19 +72,14 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Phone Input */}
-          <Controller
-            name="phone"
-            control={control}
-            render={({ field }) => (
-              <PhoneInput
-                label="رقم الهاتف"
-                placeholder="أدخل رقم الهاتف"
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.phone?.message}
-                defaultCountry="QA"
-              />
-            )}
+          <PhoneInputWithCountryCode
+            label="رقم الهاتف"
+            placeholder="أدخل رقم الهاتف"
+            phoneValue={phoneNumber}
+            countryCode={countryCode}
+            onPhoneChange={setPhoneNumber}
+            onCountryCodeChange={setCountryCode}
+            error={errors.phone?.message}
           />
 
           {/* Password Input */}
