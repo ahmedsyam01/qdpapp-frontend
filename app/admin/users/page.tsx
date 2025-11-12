@@ -201,6 +201,46 @@ export default function UsersListPage() {
     }
   };
 
+  const handleVerifyPhone = async (userId: string) => {
+    try {
+      await adminUsersService.verifyPhone(userId);
+      await loadUsers();
+    } catch (error) {
+      console.error('Failed to verify phone:', error);
+      alert('حدث خطأ أثناء توثيق الهاتف');
+    }
+  };
+
+  const handleUnverifyPhone = async (userId: string) => {
+    try {
+      await adminUsersService.unverifyPhone(userId);
+      await loadUsers();
+    } catch (error) {
+      console.error('Failed to unverify phone:', error);
+      alert('حدث خطأ أثناء إلغاء توثيق الهاتف');
+    }
+  };
+
+  const handleVerifyEmail = async (userId: string) => {
+    try {
+      await adminUsersService.verifyEmail(userId);
+      await loadUsers();
+    } catch (error) {
+      console.error('Failed to verify email:', error);
+      alert('حدث خطأ أثناء توثيق البريد الإلكتروني');
+    }
+  };
+
+  const handleUnverifyEmail = async (userId: string) => {
+    try {
+      await adminUsersService.unverifyEmail(userId);
+      await loadUsers();
+    } catch (error) {
+      console.error('Failed to unverify email:', error);
+      alert('حدث خطأ أثناء إلغاء توثيق البريد الإلكتروني');
+    }
+  };
+
   return (
     <div style={{ padding: '32px', fontFamily: 'Tajawal, sans-serif' }}>
       <style jsx global>{`
@@ -301,6 +341,10 @@ export default function UsersListPage() {
         selectedRows={selectedUsers}
         onSelectRow={handleSelectUser}
         onSelectAll={handleSelectAll}
+        onVerifyPhone={handleVerifyPhone}
+        onUnverifyPhone={handleUnverifyPhone}
+        onVerifyEmail={handleVerifyEmail}
+        onUnverifyEmail={handleUnverifyEmail}
       />
 
       {/* Pagination */}

@@ -126,4 +126,40 @@ export const adminUsersService = {
       headers: getAuthHeaders(),
     });
   },
+
+  async verifyPhone(userId: string): Promise<User> {
+    const response = await axios.put(
+      `${API_URL}/${userId}/verify-phone`,
+      {},
+      { headers: getAuthHeaders() }
+    );
+    return response.data;
+  },
+
+  async unverifyPhone(userId: string): Promise<User> {
+    const response = await axios.put(
+      `${API_URL}/${userId}/unverify-phone`,
+      {},
+      { headers: getAuthHeaders() }
+    );
+    return response.data;
+  },
+
+  async verifyEmail(userId: string): Promise<User> {
+    const response = await axios.put(
+      `${API_URL}/${userId}/verify-email`,
+      {},
+      { headers: getAuthHeaders() }
+    );
+    return response.data;
+  },
+
+  async unverifyEmail(userId: string): Promise<User> {
+    const response = await axios.put(
+      `${API_URL}/${userId}/unverify-email`,
+      {},
+      { headers: getAuthHeaders() }
+    );
+    return response.data;
+  },
 };

@@ -12,6 +12,13 @@ interface UsersTableProps {
   loading?: boolean;
   onDeleteUser?: (userId: string) => void;
   onEditUser?: (user: User) => void;
+  onVerifyPhone?: (userId: string) => void;
+  onUnverifyPhone?: (userId: string) => void;
+  onVerifyEmail?: (userId: string) => void;
+  onUnverifyEmail?: (userId: string) => void;
+  selectedRows?: Set<string>;
+  onSelectRow?: (userId: string) => void;
+  onSelectAll?: (selected: boolean) => void;
 }
 
 const userTypeLabels: Record<string, string> = {
@@ -27,6 +34,13 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   loading = false,
   onDeleteUser,
   onEditUser,
+  onVerifyPhone,
+  onUnverifyPhone,
+  onVerifyEmail,
+  onUnverifyEmail,
+  selectedRows,
+  onSelectRow,
+  onSelectAll,
 }) => {
   const router = useRouter();
 
@@ -104,17 +118,146 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       key: 'verified',
       label: 'التوثيق',
       sortable: false,
-      width: '100px',
+      width: '180px',
       render: (user) => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          {user.phoneVerified && (
-            <span style={{ fontSize: '12px', color: '#059669' }}>✓ الهاتف</span>
-          )}
-          {user.emailVerified && (
-            <span style={{ fontSize: '12px', color: '#059669' }}>✓ البريد</span>
-          )}
-          {!user.phoneVerified && !user.emailVerified && (
-            <span style={{ fontSize: '12px', color: '#6B7280' }}>غير موثق</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {/* Phone Verification */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {user.phoneVerified ? (
+              <>
+                <span style={{ fontSize: '12px', color: '#059669', flex: 1 }}>✓ الهاتف</span>
+                {onUnverifyPhone && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onUnverifyPhone(user._id);
+                    }}
+                    style={{
+                      padding: '2px 8px',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: '#DC2626',
+                      cursor: 'pointer',
+                      fontFamily: 'Tajawal, sans-serif',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                    }}
+                  >
+                    إلغاء
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <span style={{ fontSize: '12px', color: '#DC2626', flex: 1 }}>✕ الهاتف</span>
+                {onVerifyPhone && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onVerifyPhone(user._id);
+                    }}
+                    style={{
+                      padding: '2px 8px',
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: '#059669',
+                      cursor: 'pointer',
+                      fontFamily: 'Tajawal, sans-serif',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
+                    }}
+                  >
+                    توثيق
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+          {/* Email Verification */}
+          {user.email && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {user.emailVerified ? (
+                <>
+                  <span style={{ fontSize: '12px', color: '#059669', flex: 1 }}>✓ البريد</span>
+                  {onUnverifyEmail && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onUnverifyEmail(user._id);
+                      }}
+                      style={{
+                        padding: '2px 8px',
+                        background: 'rgba(239, 68, 68, 0.1)',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: '#DC2626',
+                        cursor: 'pointer',
+                        fontFamily: 'Tajawal, sans-serif',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                      }}
+                    >
+                      إلغاء
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <span style={{ fontSize: '12px', color: '#DC2626', flex: 1 }}>✕ البريد</span>
+                  {onVerifyEmail && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onVerifyEmail(user._id);
+                      }}
+                      style={{
+                        padding: '2px 8px',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: '#059669',
+                        cursor: 'pointer',
+                        fontFamily: 'Tajawal, sans-serif',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(16, 185, 129, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
+                      }}
+                    >
+                      توثيق
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
           )}
         </div>
       ),

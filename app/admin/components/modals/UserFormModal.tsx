@@ -36,6 +36,38 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
     languagePreference: user?.languagePreference || 'ar',
   });
 
+  // Update form data when user prop changes
+  React.useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || '',
+        identityNumber: user.identityNumber || '',
+        phone: user.phone || '',
+        email: user.email || '',
+        password: '',
+        userType: user.userType || 'buyer',
+        gender: user.gender || 'male',
+        address: user.address || '',
+        languagePreference: user.languagePreference || 'ar',
+      });
+    } else {
+      // Reset form for create mode
+      setFormData({
+        fullName: '',
+        identityNumber: '',
+        phone: '',
+        email: '',
+        password: '',
+        userType: 'buyer',
+        gender: 'male',
+        address: '',
+        languagePreference: 'ar',
+      });
+    }
+    // Clear errors when user changes
+    setErrors({});
+  }, [user, isOpen]);
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
