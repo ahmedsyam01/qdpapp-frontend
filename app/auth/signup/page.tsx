@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input, Button } from '@/components/forms';
+import { PhoneInput } from '@/components/forms/PhoneInput';
 import { authService } from '@/services/authService';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -33,6 +34,7 @@ export default function SignupPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
@@ -44,7 +46,7 @@ export default function SignupPage() {
       await authService.register({
         fullName: data.fullName,
         identityNumber: data.identityNumber,
-        phone: data.phone.startsWith('+974') ? data.phone : `+974${data.phone}`,
+        phone: data.phone,
         email: data.email || undefined,
         password: data.password,
       });
@@ -52,7 +54,7 @@ export default function SignupPage() {
       toast.success('تم إنشاء الحساب بنجاح! يرجى التحقق من رقم الهاتف');
 
       // Redirect to OTP verification
-      router.push(`/auth/verify-otp?phone=${encodeURIComponent(data.phone.startsWith('+974') ? data.phone : `+974${data.phone}`)}`);
+      router.push(`/auth/verify-otp?phone=${encodeURIComponent(data.phone)}`);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || 'فشل إنشاء الحساب');
@@ -123,27 +125,19 @@ export default function SignupPage() {
           />
 
           {/* Phone Input */}
-          <Input
-            label="رقم الهاتف"
-            type="tel"
-            placeholder="أدخل رقم الهاتف"
-            {...register('phone')}
-            error={errors.phone?.message}
-            icon={
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-            }
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneInput
+                label="رقم الهاتف"
+                placeholder="أدخل رقم الهاتف"
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.phone?.message}
+                defaultCountry="QA"
+              />
+            )}
           />
 
           {/* Email Input */}

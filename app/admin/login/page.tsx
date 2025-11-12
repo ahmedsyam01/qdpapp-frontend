@@ -5,22 +5,30 @@ import { useRouter } from 'next/navigation';
 import { useAdminAuthStore } from '../../../store/adminAuthStore';
 import Image from 'next/image';
 import { API_BASE_URL } from '@/lib/config';
+import PhoneInputWithCountry from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import type { E164Number } from 'react-phone-number-input';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const { setAuth } = useAdminAuthStore();
 
   const [formData, setFormData] = useState({
-    phone: '',
+    phone: '' as E164Number | string,
     password: '',
   });
   const [errors, setErrors] = useState<{ phone?: string; password?: string; general?: string }>({});
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined, general: undefined }));
+  const handlePhoneChange = (value: E164Number | undefined) => {
+    setFormData((prev) => ({ ...prev, phone: value || '' }));
+    setErrors((prev) => ({ ...prev, phone: undefined, general: undefined }));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData((prev) => ({ ...prev, password: value }));
+    setErrors((prev) => ({ ...prev, password: undefined, general: undefined }));
   };
 
   const validateForm = () => {
@@ -28,8 +36,8 @@ export default function AdminLoginPage() {
 
     if (!formData.phone) {
       newErrors.phone = 'رقم الهاتف مطلوب';
-    } else if (!/^\+974\d{8}$/.test(formData.phone)) {
-      newErrors.phone = 'رقم هاتف قطري غير صحيح (+974XXXXXXXX)';
+    } else if (typeof formData.phone === 'string' && formData.phone.length < 8) {
+      newErrors.phone = 'رقم الهاتف غير صحيح';
     }
 
     if (!formData.password) {
@@ -114,6 +122,69 @@ export default function AdminLoginPage() {
 
         * {
           font-family: 'Tajawal', sans-serif;
+        }
+
+        /* Phone Input Styling */
+        .PhoneInput {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .PhoneInputCountry {
+          display: flex;
+          align-items: center;
+          padding: 16px 12px;
+          background: #F9F9F9;
+          border: 2px solid #E5E7EB;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .PhoneInputCountry:hover,
+        .PhoneInputCountry:focus-within {
+          background: #FFFFFF;
+          border: 2px solid #D9D1BE;
+          box-shadow: 0 0 0 4px rgba(217, 209, 190, 0.15);
+        }
+
+        .PhoneInputCountryIcon {
+          width: 24px;
+          height: 24px;
+          margin-right: 4px;
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .PhoneInputCountrySelect {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+        }
+
+        .PhoneInputCountrySelectArrow {
+          display: block;
+          width: 0.3em;
+          height: 0.3em;
+          margin-left: 0.35em;
+          border-style: solid;
+          border-color: #6b7280;
+          border-top-width: 0;
+          border-bottom-width: 1px;
+          border-left-width: 0;
+          border-right-width: 1px;
+          transform: rotate(45deg);
+          opacity: 0.7;
+        }
+
+        .PhoneInput input[type="tel"]:focus {
+          background: #FFFFFF !important;
+          border: 2px solid #D9D1BE !important;
+          box-shadow: 0 0 0 4px rgba(217, 209, 190, 0.15) !important;
         }
       `}</style>
 
@@ -246,38 +317,30 @@ export default function AdminLoginPage() {
                   color: '#111827',
                   marginBottom: '10px',
                 }}>رقم الهاتف</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="+974XXXXXXXX"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  dir="ltr"
-                  style={{
-                    width: '100%',
-                    padding: '16px 20px',
-                    background: '#F9F9F9',
-                    border: errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB',
-                    borderRadius: '12px',
-                    fontSize: '16px',
-                    color: '#111827',
-                    outline: 'none',
-                    transition: 'all 0.3s ease',
-                    boxSizing: 'border-box',
-                    fontWeight: '500',
-                    textAlign: 'left',
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.background = '#FFFFFF';
-                    e.currentTarget.style.border = '2px solid #D9D1BE';
-                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(217, 209, 190, 0.15)';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.background = '#F9F9F9';
-                    e.currentTarget.style.border = errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                />
+                <div style={{ direction: 'ltr' }}>
+                  <PhoneInputWithCountry
+                    international
+                    defaultCountry="QA"
+                    value={formData.phone as E164Number}
+                    onChange={handlePhoneChange}
+                    placeholder="أدخل رقم الهاتف"
+                    numberInputProps={{
+                      style: {
+                        width: '100%',
+                        padding: '16px 20px',
+                        background: '#F9F9F9',
+                        border: errors.phone ? '2px solid #EF4444' : '2px solid #E5E7EB',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        color: '#111827',
+                        outline: 'none',
+                        transition: 'all 0.3s ease',
+                        boxSizing: 'border-box',
+                        fontWeight: '500',
+                      },
+                    }}
+                  />
+                </div>
                 {errors.phone && (
                   <p style={{
                     fontSize: '13px',
@@ -302,7 +365,7 @@ export default function AdminLoginPage() {
                   name="password"
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={handleChange}
+                  onChange={handlePasswordChange}
                   style={{
                     width: '100%',
                     padding: '16px 20px',
