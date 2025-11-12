@@ -15,7 +15,6 @@ import { getCountryCallingCode } from 'react-phone-number-input';
 const signupSchema = z.object({
   fullName: z.string().min(2, 'الاسم الكامل مطلوب'),
   identityNumber: z.string().min(11, 'رقم الهوية يجب أن يكون 11 رقم على الأقل'),
-  phone: z.string().min(8, 'رقم الهاتف مطلوب'),
   email: z.string().email('البريد الإلكتروني غير صحيح').optional().or(z.literal('')),
   password: z.string().min(6, 'كلمة السر يجب أن تكون 6 أحرف على الأقل'),
   confirmPassword: z.string().min(6, 'تأكيد كلمة السر مطلوب'),
@@ -33,6 +32,7 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState<string>('QA'); // Default to Qatar
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneError, setPhoneError] = useState<string>('');
 
   const {
     register,
@@ -43,6 +43,13 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data: SignupFormData) => {
+    // Validate phone number
+    if (!phoneNumber || phoneNumber.trim().length < 8) {
+      setPhoneError('رقم الهاتف مطلوب ويجب أن يكون 8 أرقام على الأقل');
+      return;
+    }
+
+    setPhoneError('');
     setIsLoading(true);
     try {
       const callingCode = getCountryCallingCode(countryCode as any);
@@ -135,9 +142,12 @@ export default function SignupPage() {
             placeholder="أدخل رقم الهاتف"
             phoneValue={phoneNumber}
             countryCode={countryCode}
-            onPhoneChange={setPhoneNumber}
+            onPhoneChange={(value) => {
+              setPhoneNumber(value);
+              setPhoneError('');
+            }}
             onCountryCodeChange={setCountryCode}
-            error={errors.phone?.message}
+            error={phoneError}
           />
 
           {/* Email Input */}

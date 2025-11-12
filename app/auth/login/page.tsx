@@ -14,7 +14,6 @@ import { getCountryCallingCode } from 'react-phone-number-input';
 
 // Validation schema
 const loginSchema = z.object({
-  phone: z.string().min(8, 'رقم الهاتف مطلوب'),
   password: z.string().min(6, 'كلمة السر يجب أن تكون 6 أحرف على الأقل'),
 });
 
@@ -27,6 +26,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [countryCode, setCountryCode] = useState<string>('QA'); // Default to Qatar
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneError, setPhoneError] = useState<string>('');
 
   const {
     register,
@@ -37,6 +37,13 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    // Validate phone number
+    if (!phoneNumber || phoneNumber.trim().length < 8) {
+      setPhoneError('رقم الهاتف مطلوب ويجب أن يكون 8 أرقام على الأقل');
+      return;
+    }
+
+    setPhoneError('');
     setIsLoading(true);
     try {
       const callingCode = getCountryCallingCode(countryCode as any);
@@ -77,9 +84,12 @@ export default function LoginPage() {
             placeholder="أدخل رقم الهاتف"
             phoneValue={phoneNumber}
             countryCode={countryCode}
-            onPhoneChange={setPhoneNumber}
+            onPhoneChange={(value) => {
+              setPhoneNumber(value);
+              setPhoneError('');
+            }}
             onCountryCodeChange={setCountryCode}
-            error={errors.phone?.message}
+            error={phoneError}
           />
 
           {/* Password Input */}
