@@ -123,7 +123,7 @@ export default function AdminBookingDetailPage() {
     }
   };
 
-  const handleMarkInstallmentPaid = async (installmentNumber: number) => {
+  const handleMarkInstallmentPaid = async (installmentNumber: number, installmentAmount: number) => {
     const paymentMethod = confirm('الدفع بالبطاقة؟ (إلغاء = نقداً)') ? 'card' : 'cash';
 
     try {
@@ -135,7 +135,11 @@ export default function AdminBookingDetailPage() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ paymentMethod }),
+          body: JSON.stringify({
+            paidAmount: installmentAmount,
+            paymentMethod,
+            paidAt: new Date().toISOString()
+          }),
         }
       );
 
@@ -338,7 +342,7 @@ export default function AdminBookingDetailPage() {
                         <td className="py-3 px-3">
                           {installment.status === 'pending' || installment.status === 'overdue' ? (
                             <button
-                              onClick={() => handleMarkInstallmentPaid(installment.installmentNumber)}
+                              onClick={() => handleMarkInstallmentPaid(installment.installmentNumber, installment.amount)}
                               className="px-3 py-1 text-xs font-medium rounded-lg bg-green-500 text-white hover:bg-green-600"
                             >
                               تحديد كمدفوع
